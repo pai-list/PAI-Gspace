@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   description: 'PAI Gspace — Global Workspace for monitoring, collaboration, and secure AI teams',
   keywords: ['PAI', 'AI agents', 'workspace', 'collaboration', 'Pi Network', 'ADP', 'AxiomID'],
-  authors: [{ name: 'PAI Team', url: 'https://pai.build' }],
+  authors: [{ name: 'PAI Team', url: 'https://axiomid.app' }],
   creator: 'PAI Team',
   publisher: 'PAI Universe',
   robots: {
