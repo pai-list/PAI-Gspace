@@ -48,3 +48,4 @@ worker/
 # Vercel
 .vercel/
 .vercel
+.turbo/
