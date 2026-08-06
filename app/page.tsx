@@ -109,15 +109,23 @@ export default function HomePage() {
               <div className="mt-10 flex items-center justify-center gap-4">
                 <a
                   href="https://axiomid.app"
-                  className="rounded-lg bg-primary-600 px-6 py-3 text-base font-medium text-white hover:bg-primary-500 transition-colors"
+                  className="rounded-lg border border-[#00FF00] bg-transparent px-6 py-3 text-base font-medium text-[#00FF00] hover:bg-[#00FF00]/10 transition-colors"
                 >
                   Open AxiomID
                 </a>
                 <a
                   href="https://mcp.axiomid.app"
-                  className="rounded-lg border border-white/15 bg-white/5 px-6 py-3 text-base font-medium text-slate-200 hover:bg-white/10 transition-colors"
+                  className="rounded-lg border border-[#00FF00] bg-transparent px-6 py-3 text-base font-medium text-[#00FF00] hover:bg-[#00FF00]/10 transition-colors"
                 >
                   Talk to the Gateway
+                </a>
+                <a
+                  href="https://github.com/pai-list/openidentity.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-lg border border-[#00FF00] bg-transparent px-6 py-3 text-base font-medium text-[#00FF00] hover:bg-[#00FF00]/10 transition-colors"
+                >
+                  Read the spec
                 </a>
               </div>
             </div>
