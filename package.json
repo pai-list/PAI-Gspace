@@ -1,28 +1,29 @@
 {
   "name": "pai-gspace",
-  "description": "PAI Global Workspace \u2014 Monitoring & Collaboration Hub",
-  "version": "0.1.0",
+  "description": "PAI Global Workspace — Monitoring & Collaboration Hub",
+  "version": "1.0.0",
+  "type": "module",
   "dependencies": {
-    "@vercel/analytics": "^2.0.1",
-    "@vercel/speed-insights": "^2.0.0",
     "lucide-react": "^1.25.0",
     "next": "^16.2.10",
     "next-themes": "^0.4.6",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "three": "^0.160.1"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.160.0",
     "autoprefixer": "^10.4.19",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
     "postcss": ">=8.5.10",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.0.17",
-    "@tailwindcss/postcss": "^4.3.3"
+    "vitest": "^4.0.17"
   },
   "private": true,
   "scripts": {
@@ -30,10 +31,18 @@
     "dev": "next dev",
     "env:pull": "vercel env pull .env.local",
     "env:push": "vercel env push",
-    "lint": "next lint",
+    "lint": "next lint && pnpm --filter pai-design run lint",
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "validate": "pnpm --filter pai-design run validate ./schemas ./app",
+    "validate:schemas": "pnpm --filter pai-design run validate ./schemas",
+    "centerboard:fetch": "node scripts/fetch-centerboard.mjs",
+    "centerboard:watch": "node scripts/watch-centerboard.mjs",
+    "feedback": "node scripts/feedback-logger.mjs",
+    "feedback:view": "cat .feedback.log"
   }
 }
