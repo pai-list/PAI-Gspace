@@ -1,13 +1,18 @@
-import React from 'react'
+import React, { type ReactNode } from 'react'
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import Script from 'next/script'
 import { ThemeProvider } from 'next-themes'
 import './globals.css'
-const inter = Inter({
+const grotesk = Space_Grotesk({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-space',
+})
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-jetbrains',
 })
 
 export const metadata: Metadata = {
@@ -45,11 +50,11 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} antialiased bg-gray-50 text-gray-900 dark:bg-slate-950 dark:text-gray-100 min-h-screen`}>
+      <body className={`${grotesk.variable} ${jetBrainsMono.variable} antialiased bg-gray-50 text-gray-900 dark:bg-slate-950 dark:text-gray-100 min-h-screen`}>
         <Script
           id="speed-insights"
           strategy="lazyOnload"

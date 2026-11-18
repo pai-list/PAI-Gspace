@@ -103,7 +103,17 @@ const PROTOCOLS = [
     layer: 'L1 Trust',
     status: 'LIVE',
   },
-];
+] satisfies Array<{
+  href: string;
+  code: string;
+  name: string;
+  nameAr: string;
+  desc: string;
+  descAr: string;
+  color: keyof typeof STATUS_COLORS;
+  layer: string;
+  status: string;
+}>;
 
 const MONITORED_SKILLS = [
   { id: "pi_kyc_verify", name: "Pi KYC Verifier", layer: "L2 Identity", status: "MOUNTED", color: "#10b981" },
@@ -260,6 +270,34 @@ export default function HomePage() {
   }, []);
 
   const getColorStyles = (colorKey: keyof typeof STATUS_COLORS) => STATUS_COLORS[colorKey];
+
+  const probedSkills = centerboardData?.skills as
+    | Array<{ id: string; latency: number; errors: number; up?: boolean }>
+    | undefined;
+  const avgLatencyMs =
+    probedSkills && probedSkills.length > 0
+      ? Math.round(probedSkills.reduce((sum, s) => sum + (s.latency ?? 0), 0) / probedSkills.length)
+      : null;
+  const totalProbeErrors =
+    probedSkills && probedSkills.length > 0
+      ? probedSkills.reduce((sum, s) => sum + (s.errors ?? 0), 0)
+      : null;
+  const errorRatePct =
+    totalProbeErrors !== null && probedSkills && probedSkills.length > 0
+      ? ((totalProbeErrors / probedSkills.length) * 100).toFixed(1)
+      : null;
+  const gatewayDegraded = Boolean(centerboardData?.globalWorkspace?.degraded);
+  const upCount = probedSkills ? probedSkills.filter((s) => s.up ?? s.errors === 0).length : 0;
+  const uptimePct =
+    probedSkills && probedSkills.length > 0
+      ? ((upCount / probedSkills.length) * 100).toFixed(1)
+      : null;
+  const skillUp = (skillId: string): boolean | null => {
+    if (!probedSkills) return null;
+    const match = probedSkills.find((s) => s.id === skillId);
+    if (!match) return null;
+    return match.up ?? match.errors === 0;
+  };
 
   const SkillCard = ({ skill }: { skill: typeof MONITORED_SKILLS[0] }) => {
     const isSelected = selectedSkill === skill.id;
@@ -474,10 +512,30 @@ export default function HomePage() {
               <p className="text-lg sm:text-xl max-w-3xl text-slate-400">{t.subtitle}</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <HealthMetric label={t.latency} value="12" unit="ms" trend="up" />
-              <HealthMetric label={t.throughput} value="1.2k" unit="req/m" trend="up" />
-              <HealthMetric label={t.errors} value="0.01" unit="%" trend="neutral" />
-              <HealthMetric label={t.uptime} value="99.99" unit="%" trend="up" />
+              <HealthMetric
+                label={t.latency}
+                value={avgLatencyMs ?? '—'}
+                unit={avgLatencyMs !== null ? 'ms' : ''}
+                trend={avgLatencyMs === null ? 'neutral' : avgLatencyMs < 300 ? 'up' : 'down'}
+              />
+              <HealthMetric
+                label={t.throughput}
+                value={probedSkills ? probedSkills.length : '—'}
+                unit={probedSkills ? 'probes' : ''}
+                trend="neutral"
+              />
+              <HealthMetric
+                label={t.errors}
+                value={errorRatePct ?? '—'}
+                unit={errorRatePct !== null ? '%' : ''}
+                trend={totalProbeErrors === null ? 'neutral' : totalProbeErrors === 0 ? 'up' : 'down'}
+              />
+              <HealthMetric
+                label={t.uptime}
+                value={uptimePct ?? '—'}
+                unit={uptimePct !== null ? '%' : ''}
+                trend={uptimePct === null ? 'neutral' : !gatewayDegraded && upCount > 0 ? 'up' : 'down'}
+              />
             </div>
           </div>
 
@@ -500,7 +558,7 @@ export default function HomePage() {
                 </div>
                 <div className="p-4 rounded-xl" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)' }}>
                   <div className="font-mono text-xs text-amber-400 mb-1">Active Agents</div>
-                  <div className="font-bold text-3xl text-white">{centerboardData?.globalWorkspace?.activeAgents || '—'}</div>
+                  <div className="font-bold text-3xl text-white">{centerboardData?.globalWorkspace?.activeAgents ?? '—'}</div>
                   <div className="font-mono text-xs text-slate-500 mt-1">Of 23 Subagents</div>
                 </div>
               </div>
@@ -554,19 +612,43 @@ export default function HomePage() {
               </h3>
               <div className="space-y-3 text-sm">
                 {[
-                  { name: 'Identity Layer (AxiomID)', status: 'OPERATIONAL', color: 'emerald' },
-                  { name: 'Protocol Stubs (Edge Worker)', status: 'OPERATIONAL', color: 'emerald' },
-                  { name: 'Memory Layer (L2/L3 DO)', status: 'OPERATIONAL', color: 'emerald' },
-                  { name: 'Email Gateway (mail.axiomid.app)', status: 'OPERATIONAL', color: 'emerald' },
-                  { name: 'MCP Gateway (skills.axiomid.app)', status: 'OPERATIONAL', color: 'emerald' },
-                ].map((s) => (
-                  <div key={s.name} className="flex items-center justify-between">
-                    <span className="text-slate-300">{s.name}</span>
-                    <span className={`px-2 py-0.5 text-xs font-mono rounded-full ${s.color === 'emerald' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
-                      {s.status}
-                    </span>
-                  </div>
-                ))}
+                  {
+                    name: 'Identity Layer (AxiomID)',
+                    ok: centerboardData ? !gatewayDegraded : null,
+                  },
+                  {
+                    name: 'Protocol Stubs (Edge Worker)',
+                    ok: skillUp('ppp_usb_pack'),
+                  },
+                  {
+                    name: 'Memory Layer (L2/L3 DO)',
+                    ok: skillUp('memory_recall'),
+                  },
+                  {
+                    name: 'Email Gateway (mail.axiomid.app)',
+                    ok: centerboardData ? !gatewayDegraded : null,
+                  },
+                  {
+                    name: 'MCP Gateway (skills.axiomid.app)',
+                    ok: skillUp('pi_kyc_verify'),
+                  },
+                ].map((s) => {
+                  const statusLabel = s.ok === null ? 'CHECKING' : s.ok ? 'OPERATIONAL' : 'DEGRADED';
+                  const pillClass =
+                    s.ok === null
+                      ? 'bg-slate-500/20 text-slate-300'
+                      : s.ok
+                        ? 'bg-emerald-500/20 text-emerald-400'
+                        : 'bg-rose-500/20 text-rose-400';
+                  return (
+                    <div key={s.name} className="flex items-center justify-between">
+                      <span className="text-slate-300">{s.name}</span>
+                      <span className={`px-2 py-0.5 text-xs font-mono rounded-full ${pillClass}`}>
+                        {statusLabel}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="p-5 rounded-2xl border" style={{ background: 'rgba(15,23,42,0.6)', borderColor: 'rgba(255,255,255,0.08)' }}>
@@ -576,16 +658,34 @@ export default function HomePage() {
               </h3>
               <div className="space-y-3 text-sm">
                 {[
-                  'axiomid.app', 'index.axiomid.app', 'aip.axiomid.app', 'ppp.axiomid.app',
-                  'memory.axiomid.app', 'earn.axiomid.app', 'auth.axiomid.app',
-                  'skills.axiomid.app', 'mcp.axiomid.app', 'mail.axiomid.app',
-                  'openid.axiomid.app', 'piverify.axiomid.app', 'gspace.axiomid.app',
-                ].map((d) => (
-                  <div key={d} className="flex items-center justify-between">
-                    <code className="text-cyan-400 font-mono text-xs">{d}</code>
-                    <span className="px-2 py-0.5 text-xs font-mono rounded-full bg-emerald-500/20 text-emerald-400">🟢 200</span>
-                  </div>
-                ))}
+                  { host: 'axiomid.app', ok: centerboardData ? !gatewayDegraded : null },
+                  { host: 'index.axiomid.app', ok: centerboardData ? !gatewayDegraded : null },
+                  { host: 'aip.axiomid.app', ok: skillUp('aip_tok_issue') },
+                  { host: 'ppp.axiomid.app', ok: skillUp('ppp_usb_pack') },
+                  { host: 'memory.axiomid.app', ok: skillUp('memory_recall') },
+                  { host: 'earn.axiomid.app', ok: skillUp('pi_wallet_pay') },
+                  { host: 'auth.axiomid.app', ok: centerboardData ? !gatewayDegraded : null },
+                  { host: 'skills.axiomid.app', ok: skillUp('pi_kyc_verify') },
+                  { host: 'mcp.axiomid.app', ok: skillUp('pi_kyc_verify') },
+                  { host: 'mail.axiomid.app', ok: centerboardData ? !gatewayDegraded : null },
+                  { host: 'openid.axiomid.app', ok: centerboardData ? !gatewayDegraded : null },
+                  { host: 'piverify.axiomid.app', ok: centerboardData ? !gatewayDegraded : null },
+                  { host: 'gspace.axiomid.app', ok: true },
+                ].map((d) => {
+                  const badgeText = d.ok === null ? '⏳ PROBE' : d.ok ? '🟢 200' : '🔴 DOWN';
+                  const badgeClass =
+                    d.ok === null
+                      ? 'bg-slate-500/20 text-slate-300'
+                      : d.ok
+                        ? 'bg-emerald-500/20 text-emerald-400'
+                        : 'bg-rose-500/20 text-rose-400';
+                  return (
+                    <div key={d.host} className="flex items-center justify-between">
+                      <code className="text-cyan-400 font-mono text-xs">{d.host}</code>
+                      <span className={`px-2 py-0.5 text-xs font-mono rounded-full ${badgeClass}`}>{badgeText}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="p-5 rounded-2xl border" style={{ background: 'rgba(15,23,42,0.6)', borderColor: 'rgba(255,255,255,0.08)' }}>
