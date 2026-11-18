@@ -25,6 +25,11 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   min-height: 100vh;
+  font-family: var(--font-space), system-ui, sans-serif;
+}
+
+code, pre, .font-mono, [data-mono] {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
 }
 
 /* Custom scrollbar */

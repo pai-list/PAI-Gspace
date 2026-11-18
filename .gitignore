@@ -49,3 +49,7 @@ worker/
 .vercel/
 .vercel
 .turbo/
+
+# Build caches & local agent feedback
+*.tsbuildinfo
+.feedback/
