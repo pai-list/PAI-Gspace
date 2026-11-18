@@ -27,7 +27,7 @@
   },
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "next build --webpack",
     "dev": "next dev",
     "env:pull": "vercel env pull .env.local",
     "env:push": "vercel env push",

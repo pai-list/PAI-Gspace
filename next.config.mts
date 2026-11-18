@@ -1,12 +1,16 @@
 import type { NextConfig } from "next";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = resolve(fileURLToPath(import.meta.url), "..");
-const monorepoRoot = resolve(__dirname, "../..");
+const candidateMonorepoRoot = resolve(__dirname, "../..");
+const workspaceRoot = existsSync(resolve(candidateMonorepoRoot, "node_modules/.pnpm"))
+  ? candidateMonorepoRoot
+  : __dirname;
 
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: monorepoRoot,
+  outputFileTracingRoot: workspaceRoot,
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
@@ -21,7 +25,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["lucide-react"],
   },
   turbopack: {
-    root: monorepoRoot,
+    root: workspaceRoot,
   },
 };
 
