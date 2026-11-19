@@ -1,66 +1,42 @@
-# PAI-Gspace · Global Workspace
+# PAI-Gspace (`pai-gspace`)
 
-> **Monitor · Collaborate · Secure AI Teams**
-
----
+Global Workspace Theory (GWT) interpretability console and live edge telemetry portal for the **PAI Universe**, deployed at [gspace.axiomid.app](https://gspace.axiomid.app) and integrated as a native window inside [AxiomID AuraOS](https://www.axiomid.app).
 
 ## Status
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| **Layout/Page** | ✅ **Scaffold** | Next.js 15 app router scaffold |
-| **Agent Monitoring** | ⏳ **Planned** | Real-time health, memory layers, task execution |
-| **Collaboration Hub** | ⏳ **Planned** | Shared workspaces, memory URL sharing, tool sharing |
-| **Discovery Portal** | ⏳ **Planned** | ADP-powered agent discovery, capability browsing |
-| **Pi Network Native** | ⏳ **Planned** | Identity via Pi KYC, secure team management |
+| Component | Status | Verification / Source |
+|---|---|---|
+| **GWT Landing & 16-Portal Constellation** | Live | [`app/page.tsx`](./app/page.tsx) — quad-lingual (`EN` / `AR` / `ZH` / `HI`) 16-subdomain catalog with category filters, instant search, Centerboard consciousness bus, and Interactive Edge Probe Runner |
+| **Edge Telemetry Endpoint (`/api/telemetry`)** | Live | [`app/api/telemetry/route.ts`](./app/api/telemetry/route.ts) — Next.js Edge runtime probing `skills`, `earn`, `aip`, `memory`, `ppp`, and `axiomid.app` |
+| **Root Layout & Tailwind CSS v4 Layering** | Live | [`app/layout.tsx`](./app/layout.tsx), [`app/globals.css`](./app/globals.css) (Next.js 16, React 19, Tailwind CSS v4 `@layer base`) |
+| **Unit Tests** | Implemented | [`app/__tests__/page.test.tsx`](./app/__tests__/page.test.tsx) (Vitest, 4/4 passing) |
+| **Multi-Team Write Operations & Pi Auth** | Planned | Read-only monitoring & cross-protocol links in the current release |
 
----
+## Architecture & Ecosystem Links
 
-## Architecture
-
+```text
+AxiomID AuraOS (www.axiomid.app)
+  └── PAI Gspace Window / Portal (gspace.axiomid.app) ← THIS REPO
+        ├── /api/telemetry -> probes live *.axiomid.app protocol surfaces
+        ├── AIP Security Token Gateway   (aip.axiomid.app)
+        ├── Pi Agentic Skills & MCP      (skills.axiomid.app / mcp.axiomid.app)
+        ├── Agentic Labor Exchange       (earn.axiomid.app)
+        ├── 7-Layer Memory Engine        (memory.axiomid.app)
+        └── USB Wire Protocol            (ppp.axiomid.app)
 ```
-AxiomID (entry point)
-  ├── Gspace (global workspace)      ← THIS REPO (scaffold)
-  ├── ADP (agent discovery)          → layer-6-discovery/ADP
-  ├── PAI-Memory (7-layer memory)    → layer-5-memory/pai-memory
-  ├── pai-mcp (MCP gateway)          → layer-4-mcp-gateway/pai-mcp
-  └── pai-cli (developer CLI)        → layer-7-workspace/pai-cli
-```
 
----
-
-## Quick Start
+## Scripts (`package.json`)
 
 ```bash
-# Install
 npm install
-
-# Dev server
-npm run dev
-
-# Build
-npm run build
+npm run dev         # Start Next.js development server
+npm run build       # next build --webpack
+npm run typecheck   # tsc --noEmit (also used by `npm run lint`)
+npm test            # vitest run (app/__tests__/page.test.tsx)
 ```
 
----
-
-## Current Structure
-
-```
-app/
-├── api/                 # API routes (empty)
-├── dashboard/           # Dashboard page (empty)
-├── layout.tsx           # Root layout
-├── page.tsx             # Landing page
-└── globals.css          # Tailwind imports
-```
-
----
+Additional tooling scripts: `validate`, `validate:schemas`, `centerboard:fetch`, `centerboard:watch`, `feedback`, and `feedback:view`.
 
 ## License
 
-MIT — Free for all agents, all humans, all purposes.
-
----
-
-*Part of the PAI Universe. Global Workspace for AI Teams.*
+MIT — see [`LICENSE`](./LICENSE). Part of [PAI Universe (`pai-list`)](https://github.com/pai-list).
