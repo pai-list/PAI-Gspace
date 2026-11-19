@@ -14,25 +14,25 @@
   --color-primary-950: #1e1b4b;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+@layer base {
+  html,
+  body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background-color: #030712;
+    color: #f8fafc;
+    font-family: var(--font-space), system-ui, sans-serif;
+  }
+
+  code,
+  pre,
+  .font-mono,
+  [data-mono] {
+    font-family: var(--font-jetbrains), ui-monospace, monospace;
+  }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  min-height: 100vh;
-  font-family: var(--font-space), system-ui, sans-serif;
-}
-
-code, pre, .font-mono, [data-mono] {
-  font-family: var(--font-jetbrains), ui-monospace, monospace;
-}
-
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -43,27 +43,24 @@ code, pre, .font-mono, [data-mono] {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #334155;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #475569;
 }
 
-/* Focus styles */
 *:focus-visible {
-  outline: 2px solid #6366f1;
+  outline: 2px solid #00f0ff;
   outline-offset: 2px;
 }
 
-/* Selection */
 ::selection {
-  background-color: #6366f1;
-  color: white;
+  background-color: rgba(0, 240, 255, 0.25);
+  color: #ffffff;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;

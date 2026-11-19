@@ -6,10 +6,10 @@ Global Workspace Theory (GWT) interpretability console and live edge telemetry p
 
 | Component | Status | Verification / Source |
 |---|---|---|
-| **GWT Landing & Ecosystem Grid** | Live | [`app/page.tsx`](./app/page.tsx) — protocol catalog (`EN` / `AR`), interactive telemetry cards |
+| **GWT Landing & 16-Portal Constellation** | Live | [`app/page.tsx`](./app/page.tsx) — quad-lingual (`EN` / `AR` / `ZH` / `HI`) 16-subdomain catalog with category filters, instant search, Centerboard consciousness bus, and Interactive Edge Probe Runner |
 | **Edge Telemetry Endpoint (`/api/telemetry`)** | Live | [`app/api/telemetry/route.ts`](./app/api/telemetry/route.ts) — Next.js Edge runtime probing `skills`, `earn`, `aip`, `memory`, `ppp`, and `axiomid.app` |
-| **Root Layout & Styling** | Live | [`app/layout.tsx`](./app/layout.tsx), [`app/globals.css`](./app/globals.css) (Next.js 16, React 19, Tailwind CSS 4, Three.js) |
-| **Unit Tests** | Implemented | [`app/__tests__/page.test.tsx`](./app/__tests__/page.test.tsx) (Vitest) |
+| **Root Layout & Tailwind CSS v4 Layering** | Live | [`app/layout.tsx`](./app/layout.tsx), [`app/globals.css`](./app/globals.css) (Next.js 16, React 19, Tailwind CSS v4 `@layer base`) |
+| **Unit Tests** | Implemented | [`app/__tests__/page.test.tsx`](./app/__tests__/page.test.tsx) (Vitest, 4/4 passing) |
 | **Multi-Team Write Operations & Pi Auth** | Planned | Read-only monitoring & cross-protocol links in the current release |
 
 ## Architecture & Ecosystem Links
